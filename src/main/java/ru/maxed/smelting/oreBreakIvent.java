@@ -21,9 +21,9 @@ public class oreBreakIvent {
 
     public int quantityDropped(int fortune, Random random) {
         int i=fortune;
-        float luck=random.nextFloat() ;
-        if (luck > 0.9F)  i++;
-         else if (luck < 0.2F)  i--;
+        int luck=random.nextInt(100) ;
+        if (luck >= 90)  i++;
+         else if (luck <= 20)  i--;
         return (i > 0 ) ? i : 1;
     }
 
@@ -47,7 +47,7 @@ public class oreBreakIvent {
                             continue;
                         }
                         iterator.remove();
-                        out.copy().setCount(quantityDropped(fortuneLvl,rand));
+                        out.setCount(quantityDropped( fortuneLvl,rand));
                         newStacks.add(out.copy());
                     }
                     event.getDrops().addAll(newStacks);

@@ -1,14 +1,17 @@
 package ru.maxed.smelting;
 
+import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -61,7 +64,8 @@ public class oreBreakIvent {
 
     @SubscribeEvent
     public void handleExpDrops(BlockEvent.BreakEvent event){
-        if(event.getPlayer() != null && !(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, event.getPlayer().getHeldItemMainhand()) > 0) && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")){
+        boolean canHarvest = ForgeHooks.canHarvestBlock(event.getState().getBlock(), event.getPlayer(), event.getWorld(), event.getPos());
+        if(canHarvest  && event.getPlayer() != null && !(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, event.getPlayer().getHeldItemMainhand()) > 0) && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")){
             event.setExpToDrop(10);
         }
     }

@@ -10,7 +10,7 @@ public class Smelting {
     @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new changeDrop());
+        MinecraftForge.EVENT_BUS.register(new oreBreakIvent());
 
     }
 

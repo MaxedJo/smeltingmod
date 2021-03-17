@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,12 +20,11 @@ import java.util.Random;
 
 
 public class oreBreakIvent {
-
     public int quantityDropped(int fortune, Random random) {
         int i=fortune;
         int luck=random.nextInt(100) ;
-        if (luck >= 90)  i++;
-         else if (luck <= 20)  i--;
+        if (luck >= 100-Smelting.Configs.goodLuck)  i++;
+         else if (luck <= Smelting.Configs.badLuck)  i--;
         return (i > 0 ) ? i : 1;
     }
 
@@ -59,7 +60,7 @@ public class oreBreakIvent {
     public void handleExpDrops(BlockEvent.BreakEvent event){
         boolean canHarvest = ForgeHooks.canHarvestBlock(event.getState().getBlock(), event.getPlayer(), event.getWorld(), event.getPos());
         if(canHarvest  && event.getPlayer() != null && !(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, event.getPlayer().getHeldItemMainhand()) > 0) && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")){
-            event.setExpToDrop(3);
+            event.setExpToDrop(Smelting.Configs.expFromBlock);
         }
     }
 }

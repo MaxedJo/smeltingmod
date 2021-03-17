@@ -1,6 +1,7 @@
 package ru.maxed.smelting;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockOre;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
@@ -19,21 +20,11 @@ import java.util.Random;
 public class oreBreakIvent {
 
     public int quantityDropped(int fortune, Random random) {
-        if (fortune > 0 )
-        {
-            int i = random.nextInt(fortune + 2)-1;
-
-            if (i < 0)
-            {
-                i = 0;
-            }
-
-            return  (i + 1);
-        }
-        else
-        {
-            return 1;
-        }
+        int i=fortune;
+        float luck=random.nextFloat() ;
+        if (luck > 0.9F)  i++;
+        if (luck < 0.2F)  i++;
+        return (i > 0 ) ? i : 1;
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -51,11 +42,13 @@ public class oreBreakIvent {
                             continue;
                         }
                         ItemStack out = FurnaceRecipes.instance().getSmeltingResult(stack);
+
                         if (out.isEmpty()) {
                             continue;
                         }
                         iterator.remove();
-                        newStacks.add(new ItemStack(out.getItem(), quantityDropped(fortuneLvl,rand)));
+                        out.copy().setCount(quantityDropped(fortuneLvl,rand));
+                        newStacks.add(out.copy());
                     }
                     event.getDrops().addAll(newStacks);
                 }
@@ -66,7 +59,7 @@ public class oreBreakIvent {
     public void handleExpDrops(BlockEvent.BreakEvent event){
         boolean canHarvest = ForgeHooks.canHarvestBlock(event.getState().getBlock(), event.getPlayer(), event.getWorld(), event.getPos());
         if(canHarvest  && event.getPlayer() != null && !(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, event.getPlayer().getHeldItemMainhand()) > 0) && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")){
-            event.setExpToDrop(10);
+            event.setExpToDrop(3);
         }
     }
 }

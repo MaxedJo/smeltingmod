@@ -23,7 +23,7 @@ public class oreBreakIvent {
         int i=fortune;
         float luck=random.nextFloat() ;
         if (luck > 0.9F)  i++;
-        if (luck < 0.2F)  i++;
+        if (luck < 0.2F)  i--;
         return (i > 0 ) ? i : 1;
     }
 

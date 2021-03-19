@@ -21,9 +21,15 @@ import net.minecraftforge.common.config.Config.Type;
         })
         @RangeInt(min = 0,max = 100)
         public static int badLuck=20;
+
         @Comment({
-                "Write ores separated with , ",
-                "Example minecraft:gold_ore,minecraft:iron_ore"
+                "Set true if you want to print ore names when you break them",
+                "You can use theese names in oreBlackList"
         })
-        public static String oreBlackList = "minecraft:gold_ore";
+        public static boolean debugMode = false;
+        @Comment({
+                "Write ores witch you don't want to smelt , ",
+                "Example minecraft:gold_ore"
+        })
+        public static String[] oreBlackList = {""};
 }

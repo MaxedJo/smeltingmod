@@ -5,7 +5,9 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -28,7 +30,8 @@ public class oreBreakIvent {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void dropSmelting(BlockEvent.HarvestDropsEvent event) {
         Random rand = new Random();
-        boolean check =   !Arrays.asList(Configs.oreBlackList.split(",")).contains(event.getState().getBlock().getRegistryName().toString());
+        if (Configs.debugMode && event.getHarvester() != null) event.getHarvester().sendMessage(new TextComponentString(event.getState().getBlock().getRegistryName().toString()));
+        boolean check =   !Arrays.asList(Configs.oreBlackList).contains(event.getState().getBlock().getRegistryName().toString());
         if(check && event.getHarvester() != null && !event.isSilkTouching() && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")) {
             ItemStack main = event.getHarvester().getHeldItemMainhand();
             if(!main.isEmpty()) {
@@ -57,11 +60,9 @@ public class oreBreakIvent {
     @SubscribeEvent
     public void handleExpDrops(BlockEvent.BreakEvent event){
         boolean canHarvest = ForgeHooks.canHarvestBlock(event.getState().getBlock(), event.getPlayer(), event.getWorld(), event.getPos());
-        boolean check =   !Arrays.asList(Configs.oreBlackList.split(",")).contains(event.getState().getBlock().getRegistryName().toString());
+        boolean check =   !Arrays.asList(Configs.oreBlackList).contains(event.getState().getBlock().getRegistryName().toString());
         if(check && canHarvest  && event.getPlayer() != null && !(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, event.getPlayer().getHeldItemMainhand()) > 0) && event.getState().getBlock().getUnlocalizedName().toLowerCase().contains("ore")){
                 event.setExpToDrop(Configs.expFromBlock);
-                Minecraft.getMinecraft().player.sendChatMessage((event.getState().getBlock().getRegistryName().toString()));
-
         }
     }
 }
